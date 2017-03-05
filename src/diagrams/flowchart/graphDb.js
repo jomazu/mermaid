@@ -3,6 +3,7 @@
  */
 var Logger = require('../../logger');
 var log = new Logger.Log();
+var utils = require('../../utils');
 
 var d3 = require('../../d3');
 var vertices = {};
@@ -67,7 +68,7 @@ exports.addVertex = function (id, text, type, style) {
  * @param linktext
  */
 exports.addLink = function (start, end, type, linktext) {
-    log.debug('Got edge', start, end);
+    log.info('Got edge...', start, end);
     var edge = {start: start, end: end, type: undefined, text: ''};
     linktext = type.text;
 
@@ -109,6 +110,9 @@ exports.updateLink = function (pos, style) {
     if(pos === 'default'){
         edges.defaultStyle = style;
     }else{
+        if(utils.isSubstringInArray('fill', style) === -1) {
+            style.push('fill:none');
+        }
         edges[pos].style = style;
     }
 };

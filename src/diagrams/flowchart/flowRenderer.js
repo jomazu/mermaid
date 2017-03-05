@@ -134,7 +134,8 @@ exports.addVertices = function (vert, g) {
                 break;
             case 'group':
                 _shape = 'rect';
-                verticeText = '';
+                // Need to create a text node if using svg labels, see #367
+                verticeText = conf.htmlLabels ? '' : document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 break;
             default:
                 _shape = 'rect';
@@ -423,6 +424,25 @@ exports.draw = function (text, id,isDot) {
         var path = marker.append('path')
             .attr('d', 'M 0 0 L 0 0 L 0 0 z');
         dagreD3.util.applyStyle(path, edge[type + 'Style']);
+    };
+
+    // Override normal arrowhead defined in d3. Remove style & add class to allow css styling.
+    render.arrows().normal = function normal(parent, id, edge, type) {
+        var marker = parent.append("marker")
+        .attr("id", id)
+        .attr("viewBox", "0 0 10 10")
+        .attr("refX", 9)
+        .attr("refY", 5)
+        .attr("markerUnits", "strokeWidth")
+        .attr("markerWidth", 8)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+
+        var path = marker.append("path")
+        .attr("d", "M 0 0 L 10 5 L 0 10 z")
+        .attr("class", "arrowheadPath")
+        .style("stroke-width", 1)
+        .style("stroke-dasharray", "1,0");
     };
 
     // Set up an SVG group so that we can translate the final graph.

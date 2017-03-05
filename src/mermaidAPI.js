@@ -71,7 +71,7 @@ var config = {
     startOnLoad: true,
 
     /**
-     * **arrowMarkerAbsolute** - This options controls whether or arrow markers in html code will be absolute pats or
+     * **arrowMarkerAbsolute** - This options controls whether or arrow markers in html code will be absolute paths or
      * an anchor, #. This matters if you are using base tag settings.
      */
     arrowMarkerAbsolute: false,
@@ -187,9 +187,9 @@ var config = {
         topPadding: 50,
 
         /**
-         *  **sidePadding** - the space allocated for the section name to the left of the activities.
+         *  **leftPadding** - the space allocated for the section name to the left of the activities.
          */
-        sidePadding: 75,
+        leftPadding: 75,
 
         /**
          *  **gridLineStartPadding** - Vertical starting position of the grid lines
@@ -346,8 +346,6 @@ exports.decodeEntities = function(text){
         return ';';
     });
 
-
-
     return txt;
 };
 /**
@@ -376,6 +374,8 @@ exports.decodeEntities = function(text){
 var render = function(id, txt, cb, container){
 
     if(typeof container !== 'undefined'){
+        container.innerHTML = '';
+
         d3.select(container).append('div')
             .attr('id', 'd'+id)
             .append('svg')
@@ -385,6 +385,11 @@ var render = function(id, txt, cb, container){
             .append('g');
     }
     else{
+        var element = document.querySelector('#' + 'd'+id);
+        if(element){
+            element.innerHTML = '';
+        }
+
         d3.select('body').append('div')
             .attr('id', 'd'+id)
             .append('svg')
@@ -540,6 +545,7 @@ var setConf = function(cnf){
         }
     }
 };
+
 exports.initialize = function(options){
     log.debug('Initializing mermaidAPI');
     // Update default config with options supplied at initialization
